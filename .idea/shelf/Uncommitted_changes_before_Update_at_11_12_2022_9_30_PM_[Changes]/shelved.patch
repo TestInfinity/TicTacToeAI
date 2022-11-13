@@ -1,0 +1,154 @@
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># import modules\r\nimport random\r\nimport turtle\r\nimport time\r\n\r\n# Global Variables\r\nplayer_marker = \"X\"\r\nbot_marker = \"O\"\r\nrunning = True\r\nisPlayerTurn = True\r\nboard = {\r\n    0: '', 1: ' ', 2: ' ', 3: ' ',\r\n    4: ' ', 5: ' ', 6: ' ',\r\n    7: ' ', 8: ' ', 9: ' '}\r\n\r\n# create objects\r\nlayout = turtle.Turtle()\r\nlayout.speed(0)\r\n\r\nturn_tracker = turtle.Turtle()\r\nturn_tracker.speed(0)\r\nturn_tracker.pu()\r\nturn_tracker.hideturtle()\r\n\r\nwn = turtle.Screen()\r\n\r\nwn.addshape(\"O-image_50x50.gif\")\r\nwn.addshape(\"X-image_50x50.gif\")\r\n\r\ntile_turtles = {1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None, 9: None}\r\n\r\nunused_x = []\r\nunused_o = []\r\n\r\nused_o = []\r\nused_x = []\r\n\r\n# Create X's and O's\r\nwn.tracer(False)\r\nfor i in range(10):\r\n    x = turtle.Turtle()\r\n    x.speed(0)\r\n    x.shape(\"X-image_50x50.gif\")\r\n    x.shapesize(2)\r\n    x.penup()\r\n    x.goto(200, 200)\r\n    x.speed(3)\r\n\r\n    unused_x.append(x)\r\n\r\n    o = turtle.Turtle()\r\n    o.speed(0)\r\n    o.shape(\"O-image_50x50.gif\")\r\n    o.shapesize(2)\r\n    o.penup()\r\n    o.goto(200, 100)\r\n    o.speed(3)\r\n\r\n    unused_o.append(o)\r\n\r\n\r\n# Create turtles for tiles\r\n\r\nindex = 1\r\nfor y in range(3):\r\n    c = 1\r\n    for i in range(3):\r\n        t = turtle.Turtle()\r\n        t.color(\"white\")\r\n        t.speed(0)\r\n        t.penup()\r\n        t.goto(-250, 150 - y * 100)\r\n\r\n        t.forward(c * 100)\r\n\r\n        t.shape(\"square\")\r\n        t.shapesize(4.5)\r\n        tile_turtles[index] = t\r\n        c += 1\r\n        index += 1\r\n\r\n# draw layout\r\nfor y in range(100, -1, -100):\r\n    layout.pu()\r\n    layout.goto(-200, y)\r\n\r\n    layout.pd()\r\n    layout.forward(300)\r\n\r\nlayout.seth(90)\r\n\r\nfor x in range(-100, 100, 100):\r\n    layout.pu()\r\n    layout.goto(x, -100)\r\n\r\n    layout.pd()\r\n    layout.forward(300)\r\n\r\nlayout.hideturtle()\r\nwn.tracer(True)\r\n\r\n\r\n# Move turtles to proper location\r\n\r\n\r\n# Functions\r\ndef insertLetter(letter, position):\r\n    global running\r\n\r\n    if winCheck(board):\r\n        return 0\r\n    if checkDraw():\r\n        return 0\r\n    if board[position] == ' ':\r\n        board[position] = letter\r\n        tile_clicked(tile_turtles[position].xcor(), tile_turtles[position].ycor(), tile_turtles[position], position,\r\n                     letter)\r\n\r\n    if winCheck(board):\r\n        return 0\r\n    if checkDraw():\r\n        return 0\r\n\r\n\r\ndef winCheck(board):\r\n    if (board[1] == board[2] and board[1] == board[3] and board[1] != ' '):\r\n        return True\r\n    elif (board[4] == board[5] and board[4] == board[6] and board[4] != ' '):\r\n        return True\r\n    elif (board[7] == board[8] and board[7] == board[9] and board[7] != ' '):\r\n        return True\r\n    elif (board[1] == board[4] and board[1] == board[7] and board[1] != ' '):\r\n        return True\r\n    elif (board[2] == board[5] and board[2] == board[8] and board[2] != ' '):\r\n        return True\r\n    elif (board[3] == board[6] and board[3] == board[9] and board[3] != ' '):\r\n        return True\r\n    elif (board[1] == board[5] and board[1] == board[9] and board[1] != ' '):\r\n        return True\r\n    elif (board[7] == board[5] and board[7] == board[3] and board[7] != ' '):\r\n        return True\r\n    else:\r\n        return False\r\n\r\n\r\ndef markerWinCheck(board, mark):\r\n    if board[1] == board[2] and board[1] == board[3] and board[1] == mark:\r\n        return True\r\n    elif (board[4] == board[5] and board[4] == board[6] and board[4] == mark):\r\n        return True\r\n    elif (board[7] == board[8] and board[7] == board[9] and board[7] == mark):\r\n        return True\r\n    elif (board[1] == board[4] and board[1] == board[7] and board[1] == mark):\r\n        return True\r\n    elif (board[2] == board[5] and board[2] == board[8] and board[2] == mark):\r\n        return True\r\n    elif (board[3] == board[6] and board[3] == board[9] and board[3] == mark):\r\n        return True\r\n    elif (board[1] == board[5] and board[1] == board[9] and board[1] == mark):\r\n        return True\r\n    elif (board[7] == board[5] and board[7] == board[3] and board[7] == mark):\r\n        return True\r\n    else:\r\n        return False\r\n\r\n\r\ndef checkDraw():\r\n    for key in board.keys():\r\n        if (board[key] == ' '):\r\n            return False\r\n    return True\r\n\r\n\r\ndef tile_clicked(x, y, tile, board_index, marker):\r\n    global isPlayerTurn\r\n    if marker == \"X\" and isPlayerTurn:\r\n        tile.hideturtle()\r\n        marker = unused_x.pop(0)\r\n        marker.goto(x, y)\r\n        used_x.append(marker)\r\n\r\n        board[board_index] = \"X\"\r\n        isPlayerTurn = False\r\n\r\n    elif marker == \"O\" and not isPlayerTurn:\r\n        tile.hideturtle()\r\n        marker = unused_o.pop(0)\r\n        marker.goto(x, y)\r\n        used_o.append(marker)\r\n\r\n        board[board_index] = \"O\"\r\n        isPlayerTurn = False\r\n\r\n    wn.update()\r\n\r\n\r\ndef evaluateBotLocation():\r\n    possible_moves = []\r\n\r\n    for key in board.keys():\r\n        if board[key] == ' ':\r\n            possible_moves.append(key)\r\n\r\n    # Steals Wins and Blocks\r\n    for i in possible_moves:\r\n        boardCopy = list(board.values())\r\n        boardCopy[i] = bot_marker\r\n        if markerWinCheck(boardCopy, bot_marker):\r\n            return i\r\n\r\n    for i in possible_moves:\r\n        boardCopy = list(board.values())\r\n        boardCopy[i] = player_marker\r\n        if markerWinCheck(boardCopy, player_marker):\r\n            return i\r\n\r\n    corners = []\r\n    for i in possible_moves:\r\n        if i in [1, 3, 7, 9]:\r\n            corners.append(i)\r\n    if len(corners) > 0:\r\n        move = random.choice(corners)\r\n        return move\r\n\r\n    if 5 in possible_moves:\r\n        move = 5\r\n        return move\r\n\r\n    edges = []\r\n    for i in possible_moves:\r\n        if i in [2, 4, 6, 8]:\r\n            edges.append(i)\r\n    if len(edges) > 0:\r\n        move = random.choice(corners)\r\n        return move\r\n\r\n    return 0\r\n\r\n\r\ndef finishGame():\r\n    layout.pu()\r\n    layout.goto(-300, -150)\r\n\r\n    if markerWinCheck(board, bot_marker):\r\n        layout.write(\"Opponent Won Better Luck Next Time\", font=('Courier', 30, 'italic'))\r\n    elif markerWinCheck(board, player_marker):\r\n        layout.write(\"Congratulations You Won\", font=('Courier', 30, 'italic'))\r\n    else:\r\n        layout.write(\"There was a Draw\", font=('Courier', 30, 'italic'))\r\n\r\n    layout.goto(-300, -210)\r\n    layout.write(\"Press Q to quit the game\")\r\n\r\n\r\ndef stopGame():\r\n    turtle.bye()\r\n\r\nturn_tracker.goto(0, 250)\r\nturn_tracker.write(\"Your turn\", font=('Courier', 30, 'italic'))\r\n\r\n\r\n# Event Management\r\n\r\n#Game Loop\r\nwhile running:\r\n    tile_turtles[1].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[1].xcor(), tile_turtles[1].ycor(), tile_turtles[1], 1, player_marker))\r\n    tile_turtles[2].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[2].xcor(), tile_turtles[2].ycor(), tile_turtles[2], 2, player_marker))\r\n    tile_turtles[3].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[3].xcor(), tile_turtles[3].ycor(), tile_turtles[3], 3, player_marker))\r\n\r\n    tile_turtles[4].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[4].xcor(), tile_turtles[4].ycor(), tile_turtles[4], 4, player_marker))\r\n    tile_turtles[5].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[5].xcor(), tile_turtles[5].ycor(), tile_turtles[5], 5, player_marker))\r\n    tile_turtles[6].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[6].xcor(), tile_turtles[6].ycor(), tile_turtles[6], 6, player_marker))\r\n\r\n    tile_turtles[7].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[7].xcor(), tile_turtles[7].ycor(), tile_turtles[7], 7, player_marker))\r\n    tile_turtles[8].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[8].xcor(), tile_turtles[8].ycor(), tile_turtles[8], 8, player_marker))\r\n    tile_turtles[9].onclick(\r\n        lambda x, y: tile_clicked(tile_turtles[9].xcor(), tile_turtles[9].ycor(), tile_turtles[9], 9, player_marker))\r\n\r\n    wn.onkeypress(stopGame, \"q\")\r\n\r\n    wn.listen()\r\n\r\n\r\n    if not isPlayerTurn:\r\n\r\n        move = evaluateBotLocation()\r\n\r\n        turn_tracker.clear()\r\n        turn_tracker.goto(0, 250)\r\n        turn_tracker.write(\"Opponent turn\", font=('Courier', 30, 'italic'))\r\n\r\n        time.sleep(1)\r\n\r\n        if insertLetter(bot_marker, move) == 0:\r\n            finishGame()\r\n\r\n        else:\r\n            turn_tracker.clear()\r\n            turn_tracker.goto(0, 250)\r\n            turn_tracker.write(\"Your turn\", font=('Courier', 30, 'italic'))\r\n            isPlayerTurn = True\r\n\r\nwn.mainloop()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 8d8f40a50320d4b1e34735a457aa578f1e7fcbc4)
++++ b/main.py	(date 1668308834623)
+@@ -8,6 +8,8 @@
+ bot_marker = "O"
+ running = True
+ isPlayerTurn = True
++bg_color = "beige"
++
+ board = {
+     0: '', 1: ' ', 2: ' ', 3: ' ',
+     4: ' ', 5: ' ', 6: ' ',
+@@ -22,10 +24,14 @@
+ turn_tracker.pu()
+ turn_tracker.hideturtle()
+ 
++turn_tracker.goto(240, 200)
++turn_tracker.write("(Player)", font=("Courier", 14))
++
+ wn = turtle.Screen()
+ 
+ wn.addshape("O-image_50x50.gif")
+ wn.addshape("X-image_50x50.gif")
++wn.bgcolor(bg_color)
+ 
+ tile_turtles = {1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None, 9: None}
+ 
+@@ -66,7 +72,7 @@
+     c = 1
+     for i in range(3):
+         t = turtle.Turtle()
+-        t.color("white")
++        t.color(bg_color)
+         t.speed(0)
+         t.penup()
+         t.goto(-250, 150 - y * 100)
+@@ -239,14 +245,14 @@
+ 
+ def finishGame():
+     layout.pu()
+-    layout.goto(-300, -150)
++    layout.goto(-350, -150)
+ 
+     if markerWinCheck(board, bot_marker):
+-        layout.write("Opponent Won Better Luck Next Time", font=('Courier', 30, 'italic'))
++        layout.write(f"Opponent \"{bot_marker}\" Won", font=('Courier', 30, 'italic'))
+     elif markerWinCheck(board, player_marker):
+-        layout.write("Congratulations You Won", font=('Courier', 30, 'italic'))
++        layout.write(f"You, \"{player_marker}\" Won", font=('Courier', 30, 'italic'))
+     else:
+-        layout.write("There was a Draw", font=('Courier', 30, 'italic'))
++        layout.write("Its a Draw", font=('Courier', 30, 'italic'))
+ 
+     layout.goto(-300, -210)
+     layout.write("Press Q to quit the game")
+@@ -260,52 +266,54 @@
+ 
+ 
+ # Event Management
+-
+-#Game Loop
+-while running:
+-    tile_turtles[1].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[1].xcor(), tile_turtles[1].ycor(), tile_turtles[1], 1, player_marker))
+-    tile_turtles[2].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[2].xcor(), tile_turtles[2].ycor(), tile_turtles[2], 2, player_marker))
+-    tile_turtles[3].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[3].xcor(), tile_turtles[3].ycor(), tile_turtles[3], 3, player_marker))
++try:
++    #Game Loop
++    while running:
++
++        tile_turtles[1].onclick(
++            lambda x, y: tile_clicked(tile_turtles[1].xcor(), tile_turtles[1].ycor(), tile_turtles[1], 1, player_marker))
++        tile_turtles[2].onclick(
++            lambda x, y: tile_clicked(tile_turtles[2].xcor(), tile_turtles[2].ycor(), tile_turtles[2], 2, player_marker))
++        tile_turtles[3].onclick(
++            lambda x, y: tile_clicked(tile_turtles[3].xcor(), tile_turtles[3].ycor(), tile_turtles[3], 3, player_marker))
+ 
+-    tile_turtles[4].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[4].xcor(), tile_turtles[4].ycor(), tile_turtles[4], 4, player_marker))
+-    tile_turtles[5].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[5].xcor(), tile_turtles[5].ycor(), tile_turtles[5], 5, player_marker))
+-    tile_turtles[6].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[6].xcor(), tile_turtles[6].ycor(), tile_turtles[6], 6, player_marker))
++        tile_turtles[4].onclick(
++            lambda x, y: tile_clicked(tile_turtles[4].xcor(), tile_turtles[4].ycor(), tile_turtles[4], 4, player_marker))
++        tile_turtles[5].onclick(
++            lambda x, y: tile_clicked(tile_turtles[5].xcor(), tile_turtles[5].ycor(), tile_turtles[5], 5, player_marker))
++        tile_turtles[6].onclick(
++            lambda x, y: tile_clicked(tile_turtles[6].xcor(), tile_turtles[6].ycor(), tile_turtles[6], 6, player_marker))
+ 
+-    tile_turtles[7].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[7].xcor(), tile_turtles[7].ycor(), tile_turtles[7], 7, player_marker))
+-    tile_turtles[8].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[8].xcor(), tile_turtles[8].ycor(), tile_turtles[8], 8, player_marker))
+-    tile_turtles[9].onclick(
+-        lambda x, y: tile_clicked(tile_turtles[9].xcor(), tile_turtles[9].ycor(), tile_turtles[9], 9, player_marker))
++        tile_turtles[7].onclick(
++            lambda x, y: tile_clicked(tile_turtles[7].xcor(), tile_turtles[7].ycor(), tile_turtles[7], 7, player_marker))
++        tile_turtles[8].onclick(
++            lambda x, y: tile_clicked(tile_turtles[8].xcor(), tile_turtles[8].ycor(), tile_turtles[8], 8, player_marker))
++        tile_turtles[9].onclick(
++            lambda x, y: tile_clicked(tile_turtles[9].xcor(), tile_turtles[9].ycor(), tile_turtles[9], 9, player_marker))
+ 
+-    wn.onkeypress(stopGame, "q")
++        wn.onkeypress(stopGame, "q")
+ 
+-    wn.listen()
++        wn.listen()
+ 
+ 
+-    if not isPlayerTurn:
++        if not isPlayerTurn:
+ 
+-        move = evaluateBotLocation()
++            move = evaluateBotLocation()
+ 
+-        turn_tracker.clear()
+-        turn_tracker.goto(0, 250)
+-        turn_tracker.write("Opponent turn", font=('Courier', 30, 'italic'))
++            turn_tracker.clear()
++            turn_tracker.goto(0, 250)
++            turn_tracker.write("Opponent turn", font=('Courier', 15, 'italic'))
+ 
+-        time.sleep(1)
++            time.sleep(1)
+ 
+-        if insertLetter(bot_marker, move) == 0:
+-            finishGame()
++            if insertLetter(bot_marker, move) == 0:
++                finishGame()
+ 
+-        else:
+-            turn_tracker.clear()
+-            turn_tracker.goto(0, 250)
+-            turn_tracker.write("Your turn", font=('Courier', 30, 'italic'))
+-            isPlayerTurn = True
++            else:
++                turn_tracker.clear()
++                turn_tracker.goto(0, 250)
++                turn_tracker.write("Your turn", font=('Courier', 15, 'italic'))
++                isPlayerTurn = True
++except:
++    pass
+ 
+-wn.mainloop()

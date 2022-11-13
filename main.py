@@ -51,6 +51,8 @@ turn_tracker.hideturtle()
 
 # Initializes Game
 def start():
+    wn.clear()
+
     global layout
     global turn_tracker
     global used_x
