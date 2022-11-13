@@ -1,3 +1,8 @@
+# TicTacToe Game for Ap Computer Science Principles
+# Click on any grid location to play
+# R to play again
+# Q to quit the game
+
 # import modules
 import random
 import turtle
@@ -64,25 +69,27 @@ def start():
     used_o = []
     used_x = []
 
+    wn.bgcolor(bgcolor)
+    wn.tracer(False)
+
     turn_tracker = turtle.Turtle()
+    turn_tracker.hideturtle()
     turn_tracker.speed(0)
     turn_tracker.pu()
-    turn_tracker.hideturtle()
 
     turn_tracker.goto(100, 250)
     turn_tracker.write("Player Turn", font=('Courier', 25, 'italic'))
 
     layout = turtle.Turtle()
+    layout.hideturtle()
     layout.pu()
     layout.speed(0)
-    layout.hideturtle()
 
     turn_tracker.pu()
     layout.pu()
     layout.goto(0, 0)
     layout.seth(0)
     turn_tracker.goto(0, 0)
-    wn.bgcolor(bgcolor)
 
     layout.goto(250, 190)
     layout.write("(Player)", font=('Courier', 15, 'italic'))
@@ -151,6 +158,15 @@ def start():
         layout.forward(300)
 
     layout.hideturtle()
+    wn.tracer(True)
+
+    # Guidance's Draw
+    layout.pu()
+    layout.goto(-300, -210)
+    layout.write("Press Q to quit the game")
+
+    layout.goto(-300, -230)
+    layout.write("Press R to play again")
     wn.tracer(True)
 
 
@@ -293,7 +309,7 @@ def evaluateBotLocation():
     return 0
 
 
-# gets called when game can no longes continue
+# gets called when game can no longer continue
 def finishGame():
     layout.pu()
     layout.goto(-300, -150)
@@ -305,9 +321,6 @@ def finishGame():
     else:
         layout.write("It is a Draw", font=('Courier', 30, 'italic'))
 
-    layout.goto(-300, -210)
-    layout.write("Press Q to quit the game")
-
 
 # Ends the game
 def stopGame():
@@ -316,8 +329,10 @@ def stopGame():
 
 # Restarts the game
 def restart():
+    wn.tracer(False)
     wn.clear()
     start()
+    wn.tracer(True)
 
 
 # Initialize Game
