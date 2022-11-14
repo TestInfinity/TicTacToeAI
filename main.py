@@ -1,7 +1,11 @@
 # TicTacToe Game for Ap Computer Science Principles
 # Click on any grid location to play
+
 # R to play again
 # Q to quit the game
+
+# Run this with 2 50x50 asset files both an X, and a O
+# Titled X-image_50x50.gif, O-image_50x50.gif
 
 # import modules
 import random
@@ -14,14 +18,18 @@ board = {
     4: ' ', 5: ' ', 6: ' ',
     7: ' ', 8: ' ', 9: ' '}
 
+# markers
 player_marker = "X"
 bot_marker = "O"
-running = True
-bgcolor = "beige"
-isPlayerTurn = True
 
+isPlayerTurn = True  # Decides whether it is player or robots turn
+
+bgcolor = "beige"
+
+# Binds each of the tiles with a coodinate
 tile_turtles = {1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None, 9: None}
 
+# Used to track the X's and O's
 unused_x = []
 unused_o = []
 
@@ -49,10 +57,10 @@ turn_tracker.hideturtle()
 
 # Functions
 
-# Initializes Game
-def start():
-    wn.clear()
+def start():  # Initializes, and Resets Game
+    wn.clear()  # In case of a reset
 
+    # Imports all variables that will be edited
     global layout
     global turn_tracker
     global used_x
@@ -61,38 +69,47 @@ def start():
     global unused_o
     global board
 
+    # resets the board
     board = {
         0: '', 1: ' ', 2: ' ', 3: ' ',
         4: ' ', 5: ' ', 6: ' ',
         7: ' ', 8: ' ', 9: ' '}
 
+    # Reset's all X's and O's in list
     unused_o = []
     unused_x = []
+
     used_o = []
     used_x = []
 
-    wn.bgcolor(bgcolor)
-    wn.tracer(False)
+    wn.bgcolor(bgcolor)  # Sets background color for aesthetic
 
+    wn.tracer(False)  # Disables all animation
+
+    # Sets up turn_tracker turtle
     turn_tracker = turtle.Turtle()
     turn_tracker.hideturtle()
     turn_tracker.speed(0)
     turn_tracker.pu()
 
+    # Initializes with player turn
     turn_tracker.goto(100, 250)
     turn_tracker.write("Player Turn", font=('Courier', 25, 'italic'))
 
+    # Sets up player variable
     layout = turtle.Turtle()
     layout.hideturtle()
     layout.pu()
     layout.speed(0)
-
-    turn_tracker.pu()
-    layout.pu()
     layout.goto(0, 0)
     layout.seth(0)
-    turn_tracker.goto(0, 0)
 
+    #Draws title
+    layout.goto(-200, 300)
+    layout.write("Tic Tac Toe", font=('Courier', 40, "bold"))
+
+
+    # Draws indicators for the turtles
     layout.goto(250, 190)
     layout.write("(Player)", font=('Courier', 15, 'italic'))
 
@@ -100,8 +117,8 @@ def start():
     layout.write("(Opponent)", font=('Courier', 15, 'italic'))
 
     # Create X's and O's
-    wn.tracer(False)
     for i in range(10):
+        # Creates all X's
         x = turtle.Turtle()
         x.speed(0)
         x.shape("X-image_50x50.gif")
@@ -109,9 +126,9 @@ def start():
         x.penup()
         x.goto(200, 200)
         x.speed(3)
-
         unused_x.append(x)
 
+        # Create all O's
         o = turtle.Turtle()
         o.speed(0)
         o.shape("O-image_50x50.gif")
@@ -119,7 +136,6 @@ def start():
         o.penup()
         o.goto(200, 100)
         o.speed(3)
-
         unused_o.append(o)
 
     # Create turtles for tiles
@@ -143,24 +159,27 @@ def start():
             index += 1
 
     # draw layout
+    # loop to draw horizantal lines
     for y in range(100, -1, -100):
+        # Goes to correct location
         layout.pu()
         layout.goto(-200, y)
-
+        # draws the lines
         layout.pd()
         layout.forward(300)
 
+    # Sets heading for next to lines
     layout.seth(90)
 
+    # loop to draw horizantal lines
     for x in range(-100, 100, 100):
+        # Goes to correct location
         layout.pu()
         layout.goto(x, -100)
 
+        # draws the lines
         layout.pd()
         layout.forward(300)
-
-    layout.hideturtle()
-    wn.tracer(True)
 
     # Guidance's Draw
     layout.pu()
@@ -174,17 +193,19 @@ def start():
 
 # Inserts letter to dict, and moves marker to key
 def insertLetter(letter, position):
-    global running
-
+    # Informs the client if game is already over
     if winCheck(board):
         return 0
     if checkDraw(board):
         return 0
+
+    # Inserts letter into dict, and moves marker to key
     if board[position] == ' ':
         board[position] = letter
         tile_clicked(tile_turtles[position].xcor(), tile_turtles[position].ycor(), tile_turtles[position], position,
                      letter)
 
+    # Informs the client if game is over because of this move
     if winCheck(board):
         return 0
     if checkDraw(board):
@@ -193,6 +214,15 @@ def insertLetter(letter, position):
 
 # Checks if someone has won the game
 def winCheck(boardState):
+    # 1 | 2 | 3
+    # 4 | 5 | 6
+    # 7 | 8 | 9
+
+    # Pseudocode:
+    # If 1 = 2, and 1 = 3, and 1 is a marker:
+    #   return True
+    # ................................
+
     if boardState[1] == boardState[2] and boardState[1] == boardState[3] and boardState[1] != ' ':
         return True
     elif boardState[4] == boardState[5] and boardState[4] == boardState[6] and boardState[4] != ' ':
@@ -215,21 +245,30 @@ def winCheck(boardState):
 
 # Checks if a specific marker has one
 def markerWinCheck(boardState, mark):
+    # 1 | 2 | 3
+    # 4 | 5 | 6
+    # 7 | 8 | 9
+
+    # Pseudocode:
+    # If 1 = 2, and 1 = 3, and 1 = mark:
+    #   return True
+    # ................................
+
     if boardState[1] == boardState[2] and boardState[1] == boardState[3] and boardState[1] == mark:
         return True
-    elif (boardState[4] == boardState[5] and boardState[4] == boardState[6] and boardState[4] == mark):
+    elif boardState[4] == boardState[5] and boardState[4] == boardState[6] and boardState[4] == mark:
         return True
-    elif (boardState[7] == boardState[8] and boardState[7] == boardState[9] and boardState[7] == mark):
+    elif boardState[7] == boardState[8] and boardState[7] == boardState[9] and boardState[7] == mark:
         return True
-    elif (boardState[1] == boardState[4] and boardState[1] == boardState[7] and boardState[1] == mark):
+    elif boardState[1] == boardState[4] and boardState[1] == boardState[7] and boardState[1] == mark:
         return True
-    elif (boardState[2] == boardState[5] and boardState[2] == boardState[8] and boardState[2] == mark):
+    elif boardState[2] == boardState[5] and boardState[2] == boardState[8] and boardState[2] == mark:
         return True
-    elif (boardState[3] == boardState[6] and boardState[3] == boardState[9] and boardState[3] == mark):
+    elif boardState[3] == boardState[6] and boardState[3] == boardState[9] and boardState[3] == mark:
         return True
-    elif (boardState[1] == boardState[5] and boardState[1] == boardState[9] and boardState[1] == mark):
+    elif boardState[1] == boardState[5] and boardState[1] == boardState[9] and boardState[1] == mark:
         return True
-    elif (boardState[7] == boardState[5] and boardState[7] == boardState[3] and boardState[7] == mark):
+    elif boardState[7] == boardState[5] and boardState[7] == boardState[3] and boardState[7] == mark:
         return True
     else:
         return False
@@ -237,8 +276,15 @@ def markerWinCheck(boardState, mark):
 
 # Checks for a draw
 def checkDraw(boardState):
+    # Pseudocode:
+
+    # If no item in board is empty
+    #   return True
+    # Else
+    #   return False
+
     for key in boardState.keys():
-        if (boardState[key] == ' '):
+        if boardState[key] == ' ':
             return False
     return True
 
@@ -246,6 +292,17 @@ def checkDraw(boardState):
 # Moves Marker to tile
 def tile_clicked(x, y, tile, board_index, marker):
     global isPlayerTurn
+
+    # Pseudocode:
+
+    # If mark = X, and Its Players Turn:
+    #   Move turtle to the tile
+    #   Change the Board
+    #   Change to Opponents Turn
+    # Elif mark = O, and it is not player turn:
+    #   Move turtle to tile
+    #   Change board
+
     if marker == "X" and isPlayerTurn:
         tile.hideturtle()
         marker = unused_x.pop(0)
@@ -262,13 +319,37 @@ def tile_clicked(x, y, tile, board_index, marker):
         used_o.append(marker)
 
         board[board_index] = "O"
-        isPlayerTurn = False
 
     wn.update()
 
 
 # Places the opponent at the best location
 def evaluateBotLocation():
+    # Pseudocode:
+    #
+    # possibleMoves = getAllPossibleMoves
+    #
+    # If win is possible:
+    #   Place marker there
+    #   exit
+
+    # If player win is possible:
+    #   Place marker there
+    #   exit
+
+    # If center is available
+    #   place marker there
+
+    # If corner is available
+    #   place marker in a random corner
+    #   exit
+
+    # If edge is available
+    #   place marker in a random edge
+    #   exit
+
+    # exit
+
     possible_moves = []
 
     for key in board.keys():
@@ -316,6 +397,7 @@ def finishGame():
     layout.pu()
     layout.goto(-300, -150)
 
+    # Displays who won or whether its a draw
     if markerWinCheck(board, bot_marker):
         layout.write(f"Opponent \"{bot_marker}\" Won", font=('Courier', 30, 'italic'))
     elif markerWinCheck(board, player_marker):
@@ -331,24 +413,32 @@ def stopGame():
 
 # Restarts the game
 def restart():
-    wn.tracer(False)
-    wn.clear()
     start()
-    wn.tracer(True)
 
 
 # Initialize Game
 start()
 
 # Game Loop
+
+# Note: The reason for the try catch is when the player exits the game,
+# It is often in the middle of a task therefore unable to finsh, and gives an error
 try:
-    while running:
+    while True:
+
+        # Pseudocode
+
+        # When tile is clicked
+        #   Move X to tile
+
         tile_turtles[1].onclick(
             lambda x, y: tile_clicked(tile_turtles[1].xcor(), tile_turtles[1].ycor(), tile_turtles[1], 1,
                                       player_marker))
+
         tile_turtles[2].onclick(
             lambda x, y: tile_clicked(tile_turtles[2].xcor(), tile_turtles[2].ycor(), tile_turtles[2], 2,
                                       player_marker))
+
         tile_turtles[3].onclick(
             lambda x, y: tile_clicked(tile_turtles[3].xcor(), tile_turtles[3].ycor(), tile_turtles[3], 3,
                                       player_marker))
@@ -356,9 +446,11 @@ try:
         tile_turtles[4].onclick(
             lambda x, y: tile_clicked(tile_turtles[4].xcor(), tile_turtles[4].ycor(), tile_turtles[4], 4,
                                       player_marker))
+
         tile_turtles[5].onclick(
             lambda x, y: tile_clicked(tile_turtles[5].xcor(), tile_turtles[5].ycor(), tile_turtles[5], 5,
                                       player_marker))
+
         tile_turtles[6].onclick(
             lambda x, y: tile_clicked(tile_turtles[6].xcor(), tile_turtles[6].ycor(), tile_turtles[6], 6,
                                       player_marker))
@@ -366,31 +458,39 @@ try:
         tile_turtles[7].onclick(
             lambda x, y: tile_clicked(tile_turtles[7].xcor(), tile_turtles[7].ycor(), tile_turtles[7], 7,
                                       player_marker))
+
         tile_turtles[8].onclick(
             lambda x, y: tile_clicked(tile_turtles[8].xcor(), tile_turtles[8].ycor(), tile_turtles[8], 8,
                                       player_marker))
+
         tile_turtles[9].onclick(
             lambda x, y: tile_clicked(tile_turtles[9].xcor(), tile_turtles[9].ycor(), tile_turtles[9], 9,
                                       player_marker))
 
+        # Key presses for extra features
         wn.onkeypress(stopGame, "q")
         wn.onkeypress(restart, "r")
 
+        # Listens for all keyboard presses
         wn.listen()
 
         if not isPlayerTurn:
 
+            # Determine bots Move
             move = evaluateBotLocation()
 
             turn_tracker.clear()
             turn_tracker.goto(100, 250)
             turn_tracker.write("Opponent turn", font=('Courier', 25, 'italic'))
 
-            time.sleep(1)
+            # waits to create illusion of decision time
+            time.sleep(1.61)
 
+            # Plays bot move, if it ends game then finish game
             if insertLetter(bot_marker, move) == 0:
                 finishGame()
 
+            # Continue on game if bot move doesn't finish
             else:
                 turn_tracker.clear()
                 turn_tracker.goto(100, 250)
