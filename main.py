@@ -93,7 +93,7 @@ def start():  # Initializes, and Resets Game
     turn_tracker.pu()
 
     # Initializes with player turn
-    turn_tracker.goto(100, 250)
+    turn_tracker.goto(150, 250)
     turn_tracker.write("Player Turn", font=('Courier', 25, 'italic'))
 
     # Sets up player variable
@@ -183,11 +183,11 @@ def start():  # Initializes, and Resets Game
 
     # Guidance's Draw
     layout.pu()
-    layout.goto(-300, -210)
-    layout.write("Press Q to quit the game")
+    layout.goto(-350, -210)
+    layout.write("Press Q to quit the game", font=("Open Sans", 10))
 
-    layout.goto(-300, -230)
-    layout.write("Press R to play again")
+    layout.goto(-350, -230)
+    layout.write("Press R to reset the game",  font=("Open Sans", 10))
     wn.tracer(True)
 
 
@@ -480,7 +480,7 @@ try:
             move = evaluateBotLocation()
 
             turn_tracker.clear()
-            turn_tracker.goto(100, 250)
+            turn_tracker.goto(150, 250)
             turn_tracker.write("Opponent turn", font=('Courier', 25, 'italic'))
 
             # waits to create illusion of decision time
@@ -493,7 +493,7 @@ try:
             # Continue on game if bot move doesn't finish
             else:
                 turn_tracker.clear()
-                turn_tracker.goto(100, 250)
+                turn_tracker.goto(150, 250)
                 turn_tracker.write("Player turn", font=('Courier', 25, 'italic'))
                 isPlayerTurn = True
 
