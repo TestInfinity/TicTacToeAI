@@ -68,6 +68,7 @@ def start():  # Initializes, and Resets Game
     global unused_x
     global unused_o
     global board
+    global isPlayerTurn
 
     # resets the board
     board = {
@@ -78,6 +79,9 @@ def start():  # Initializes, and Resets Game
     # Reset's all X's and O's in list
     unused_o = []
     unused_x = []
+
+    # Resets isPlayerTurn
+    isPlayerTurn = True
 
     used_o = []
     used_x = []
@@ -104,10 +108,9 @@ def start():  # Initializes, and Resets Game
     layout.goto(0, 0)
     layout.seth(0)
 
-    #Draws title
+    # Draws title
     layout.goto(-200, 300)
     layout.write("Tic Tac Toe", font=('Courier', 40, "bold"))
-
 
     # Draws indicators for the turtles
     layout.goto(250, 190)
@@ -187,7 +190,7 @@ def start():  # Initializes, and Resets Game
     layout.write("Press Q to quit the game", font=("Open Sans", 10))
 
     layout.goto(-350, -230)
-    layout.write("Press R to reset the game",  font=("Open Sans", 10))
+    layout.write("Press R to reset the game", font=("Open Sans", 10))
     wn.tracer(True)
 
 
@@ -218,10 +221,10 @@ def winCheck(boardState):
     # 4 | 5 | 6
     # 7 | 8 | 9
 
-    # Pseudocode:
+    # Pseudocode for winCheck:
     # If 1 = 2, and 1 = 3, and 1 is a marker:
     #   return True
-    # ................................
+    # repeat for all remaining cases
 
     if boardState[1] == boardState[2] and boardState[1] == boardState[3] and boardState[1] != ' ':
         return True
@@ -249,10 +252,10 @@ def markerWinCheck(boardState, mark):
     # 4 | 5 | 6
     # 7 | 8 | 9
 
-    # Pseudocode:
+    # Pseudocode for markerWinCheck:
     # If 1 = 2, and 1 = 3, and 1 = mark:
     #   return True
-    # ................................
+    # repeat for all remaining cases
 
     if boardState[1] == boardState[2] and boardState[1] == boardState[3] and boardState[1] == mark:
         return True
@@ -276,7 +279,7 @@ def markerWinCheck(boardState, mark):
 
 # Checks for a draw
 def checkDraw(boardState):
-    # Pseudocode:
+    # Pseudocode for check draw:
 
     # If no item in board is empty
     #   return True
@@ -293,7 +296,7 @@ def checkDraw(boardState):
 def tile_clicked(x, y, tile, board_index, marker):
     global isPlayerTurn
 
-    # Pseudocode:
+    # Pseudocode for tile_clicked:
 
     # If mark = X, and Its Players Turn:
     #   Move turtle to the tile
@@ -325,7 +328,7 @@ def tile_clicked(x, y, tile, board_index, marker):
 
 # Places the opponent at the best location
 def evaluateBotLocation():
-    # Pseudocode:
+    # Pseudocode for evaluateBotLocation:
     #
     # possibleMoves = getAllPossibleMoves
     #
@@ -402,7 +405,7 @@ def finishGame():
         layout.write(f"Opponent \"{bot_marker}\" Won", font=('Courier', 30, 'italic'))
     elif markerWinCheck(board, player_marker):
         layout.write(f"You \"{player_marker}\" Won", font=('Courier', 30, 'italic'))
-    else:
+    elif checkDraw(board):
         layout.write("It is a Draw", font=('Courier', 30, 'italic'))
 
 
